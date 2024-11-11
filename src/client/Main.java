@@ -83,49 +83,59 @@ public class Main {
 			// }
 
 			// Grouping example: count employees in each department
-			//List<Object[]> list = session.createQuery("SELECT d.depName, COUNT(e) FROM Employee e JOIN e.department d GROUP BY d.depName").list();
-			//for (Object[] objects : list) {
-			//	System.out.println(objects[0]);
-			//	System.out.println(objects[1]);
-			//}
+			// List<Object[]> list = session.createQuery("SELECT d.depName, COUNT(e) FROM
+			// Employee e JOIN e.department d GROUP BY d.depName").list();
+			// for (Object[] objects : list) {
+			// System.out.println(objects[0]);
+			// System.out.println(objects[1]);
+			// }
 
-			
 			// Pagination example: get a paginated list of employees
-			
-			 // Set the page number and page size
-	        int pageNumber = 1;  // First page
-	        int pageSize = 5;    // Number of records per page
-	        
-			 Query query = session.createQuery("from Employee");
-			 query.setFirstResult((pageNumber - 1) * pageSize); // Set starting point for the page
-	            query.setMaxResults(pageSize);                     // Set max results per page
-	            // Execute query and get the list of employees
-	            List<Employee> employees = query.list();
 
-	            // Print the results for the current page
-	            System.out.println("Page Number: " + pageNumber);
-	            for (Employee employee : employees) {
-	                System.out.println("Employee ID: " + employee.getEmpId() + 
-	                                   ", Name: " + employee.getEmpName() + 
-	                                   ", Salary: " + employee.getSalary());
-	            }
-		           
-		        
-		   
+			// Set the page number and page size
+			int pageNumber = 1; // First page
+			int pageSize = 5; // Number of records per page
 
-	session.beginTransaction().commit();session.close();sessionFactory.close();
+			Query query = session.createQuery("from Employee");
+			query.setFirstResult((pageNumber - 1) * pageSize); // Set starting point for the page
+			/*
+			 * Here pageNumber - 1: Subtracting 1 from the pageNumber adjusts the starting
+			 * point because page numbers are generally counted starting from 1 (e.g., Page
+			 * 1, Page 2), but indexing starts from 0.Multiplying by pageSize then
+			 * calculates the exact offset in the list of records.
+			 * 
+			 * Page 1 (pageNumber = 1): ((1 - 1) * pageSize) = 0, so it starts at index 0.
+			 * Page 2 (pageNumber = 2): ((2 - 1) * pageSize) = pageSize, so it starts at
+			 * index equal to pageSize (e.g., index 5 if pageSize is 5). Page 3 (pageNumber
+			 * = 3): ((3 - 1) * pageSize) = 2 * pageSize, so it starts at index 10 if
+			 * pageSize is 5.
+			 * 
+			 */
+			query.setMaxResults(pageSize);// Set max results per page
+			// Execute query and get the list of employees
+			List<Employee> employees = query.list();
 
-	}catch(
+			// Print the results for the current page
+			System.out.println("Page Number: " + pageNumber);
+			for (Employee employee : employees) {
+				System.out.println("Employee ID: " + employee.getEmpId() + ", Name: " + employee.getEmpName()
+						+ ", Salary: " + employee.getSalary());
+			}
 
-	Exception e)
-	{
-		e.printStackTrace();
-		session.close();
-		sessionFactory.close();
-	}finally
-	{
-		session.close();
-		sessionFactory.close();
+			session.beginTransaction().commit();
+			session.close();
+			sessionFactory.close();
+
+		} catch (
+
+		Exception e) {
+			e.printStackTrace();
+			session.close();
+			sessionFactory.close();
+		} finally {
+			session.close();
+			sessionFactory.close();
+		}
+
 	}
-
-}}
+}
